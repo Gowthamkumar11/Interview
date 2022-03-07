@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 ],
               ),
-              const SizedBox(height: 150),
+              const SizedBox(height: 80),
               Center(
                 child: Transform(
                   child: Container(

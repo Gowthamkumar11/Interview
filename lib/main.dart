@@ -25,9 +25,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int text1 = 0;
-  int text2 = 0;
-  double valueText = 0;
+  int text1 = 0; // for _a value length;
+  int text2 = 0; // for _b value length;
+  double valueText = 0; // for rotation;
+  final TextEditingController _a =
+      new TextEditingController(); // for left Textformfield
+  final TextEditingController _b =
+      new TextEditingController(); // for right Textformfield
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,26 +63,52 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Padding(
                         padding: const EdgeInsets.all(2.0),
                         child: TextFormField(
-                          onChanged: (value) {
+                          controller: _a,
+                          onChanged: (_) {
+                            // setstate is used for rerender the UI
                             setState(() {
-                              text1 = value.length;
+                              text1 = _a.text.length;
                             });
+
+                            // when both value length equal
                             if (text1 == text2) {
                               setState(() {
                                 valueText = 0;
-                                print('object value of');
+                                print('object value of equal');
                               });
                             }
+
+                            // when left value is greater than right value
                             if (text1 > text2) {
-                              setState(() {
-                                valueText = -0.3;
-                                print('object value of');
-                              });
+                              // when left value reaches the 90 degree
+                              if ((text1.toDouble() / 100) >= 1.57) {
+                                setState(() {
+                                  valueText = 0;
+                                  _a.clear();
+                                  _b.clear();
+                                  text1 = 0;
+                                  text2 = 0;
+
+                                  print(
+                                      'object text1 value highest in _a maximum ');
+                                });
+                              } else {
+                                // 0 to 90 degree
+                                setState(() {
+                                  valueText = text1 > text2
+                                      ? -(text1.toDouble() / 100)
+                                      : (text2.toDouble() / 100);
+                                  print(
+                                      'object text1 value highest in _a $text1');
+                                });
+                              }
                             }
+
+                            // when left value is less than right value
                             if (text1 < text2) {
                               setState(() {
-                                valueText = 0.3;
-                                print('object value of');
+                                valueText = text1.toDouble() / 100;
+                                print('object value of text2 highest in _a');
                               });
                             }
                           },
@@ -99,27 +130,52 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Padding(
                         padding: const EdgeInsets.all(2.0),
                         child: TextFormField(
-                          onChanged: (value1) {
+                          controller: _b,
+                          onChanged: (_) {
                             setState(() {
-                              text2 = value1.length;
+                              text2 = _b.text.length;
                             });
+
+                            // when both value length equal.
                             if (text1 == text2) {
                               setState(() {
                                 valueText = 0;
-                                print('object value of');
+                                print('object value of equal');
                               });
                             }
+
+                            // when left value is greater than right.
                             if (text1 > text2) {
                               setState(() {
-                                valueText = -0.3;
-                                print('object value of');
+                                valueText = -(text1.toDouble() / 100);
+                                print('object value of text1 highest in _b');
                               });
                             }
+
                             if (text1 < text2) {
-                              setState(() {
-                                valueText = 0.3;
-                                print('object value of');
-                              });
+                              // when right value reaches the 90 degree
+                              if (text2.toDouble() / 100 >= 1.57) {
+                                setState(() {
+                                  valueText = 0;
+                                  _a.clear();
+                                  _b.clear();
+                                  text1 = 0;
+                                  text2 = 0;
+
+                                  print(
+                                      'object value of text1 highest in _b maximum ');
+                                });
+                              } else {
+                                // 0 to 90 degree
+                                setState(() {
+                                  valueText = text1 > text2
+                                      ? -(text1.toDouble() / 100)
+                                      : (text2.toDouble() / 100);
+
+                                  print(
+                                      'object value of text1 highest in _b $text1');
+                                });
+                              }
                             }
                           },
                           maxLines: 15,
@@ -134,6 +190,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               const SizedBox(height: 80),
+
+              // Line container(blue box)
               Center(
                 child: Transform(
                   child: Container(
@@ -162,7 +220,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                   ),
+                  // for container alignment
                   alignment: FractionalOffset.center,
+                  // for Z axis rotation
                   transform: Matrix4.identity()..rotateZ(valueText * 1),
                 ),
               ),

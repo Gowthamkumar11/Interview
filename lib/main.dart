@@ -27,14 +27,27 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int text1 = 0; // for _a value length;
   int text2 = 0; // for _b value length;
+
   double valueText = 0; // for rotation;
+  int temp = 0; //for find difference between left and right
   final TextEditingController _a =
-      new TextEditingController(); // for left Textformfield
+      TextEditingController(); // for left Textformfield
   final TextEditingController _b =
-      new TextEditingController(); // for right Textformfield
+      TextEditingController(); // for right Textformfield
 
   @override
+  dataclear() {
+    valueText = 0;
+    _a.clear();
+    _b.clear();
+    text1 = 0;
+    text2 = 0;
+
+    temp = 0;
+  }
+
   Widget build(BuildContext context) {
+    valueText > 1.57 || valueText < -1.57 ? dataclear() : null;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -70,45 +83,20 @@ class _MyHomePageState extends State<MyHomePage> {
                               text1 = _a.text.length;
                             });
 
-                            // when both value length equal
-                            if (text1 == text2) {
+                            temp = text1 - text2;
+
+                            if (valueText > 1.57) {
                               setState(() {
-                                valueText = 0;
-                                print('object value of equal');
+                                dataclear();
                               });
-                            }
-
-                            // when left value is greater than right value
-                            if (text1 > text2) {
-                              // when left value reaches the 90 degree
-                              if ((text1.toDouble() / 100) >= 1.57) {
-                                setState(() {
-                                  valueText = 0;
-                                  _a.clear();
-                                  _b.clear();
-                                  text1 = 0;
-                                  text2 = 0;
-
-                                  print(
-                                      'object text1 value highest in _a maximum ');
-                                });
-                              } else {
-                                // 0 to 90 degree
-                                setState(() {
-                                  valueText = text1 > text2
-                                      ? -(text1.toDouble() / 100)
-                                      : (text2.toDouble() / 100);
-                                  print(
-                                      'object text1 value highest in _a $text1');
-                                });
-                              }
-                            }
-
-                            // when left value is less than right value
-                            if (text1 < text2) {
+                            } else {
+                              // 0 to 90 degree
                               setState(() {
-                                valueText = text1.toDouble() / 100;
-                                print('object value of text2 highest in _a');
+                                valueText = temp < 0
+                                    ? text1 < text2
+                                        ? -(temp.toDouble() / 100)
+                                        : (temp.toDouble() / 100)
+                                    : -(temp.toDouble() / 100);
                               });
                             }
                           },
@@ -136,46 +124,21 @@ class _MyHomePageState extends State<MyHomePage> {
                               text2 = _b.text.length;
                             });
 
-                            // when both value length equal.
-                            if (text1 == text2) {
+                            temp = text1 - text2;
+
+                            if (valueText < -1.57) {
                               setState(() {
-                                valueText = 0;
-                                print('object value of equal');
+                                dataclear();
                               });
-                            }
-
-                            // when left value is greater than right.
-                            if (text1 > text2) {
+                            } else {
+                              // 0 to 90 degree
                               setState(() {
-                                valueText = -(text1.toDouble() / 100);
-                                print('object value of text1 highest in _b');
+                                valueText = temp < 0
+                                    ? -(temp.toDouble() / 100)
+                                    : text1 < text2
+                                        ? (temp.toDouble() / 100)
+                                        : -(temp.toDouble() / 100);
                               });
-                            }
-
-                            if (text1 < text2) {
-                              // when right value reaches the 90 degree
-                              if (text2.toDouble() / 100 >= 1.57) {
-                                setState(() {
-                                  valueText = 0;
-                                  _a.clear();
-                                  _b.clear();
-                                  text1 = 0;
-                                  text2 = 0;
-
-                                  print(
-                                      'object value of text1 highest in _b maximum ');
-                                });
-                              } else {
-                                // 0 to 90 degree
-                                setState(() {
-                                  valueText = text1 > text2
-                                      ? -(text1.toDouble() / 100)
-                                      : (text2.toDouble() / 100);
-
-                                  print(
-                                      'object value of text1 highest in _b $text1');
-                                });
-                              }
                             }
                           },
                           maxLines: 15,
